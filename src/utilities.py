@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-
+from datetime import datetime
 
 def scrape_url_and_write_csv(output_path,url):
     response = requests.get(url)
@@ -9,7 +9,7 @@ def scrape_url_and_write_csv(output_path,url):
     print(soup.find('div', class_="product__sizes mb-1"))
     data = soup.select('div[class="product col-6 col-sm-4 col-md-3 pt-3 pb-md-3 px-1 px-sm-3 px-md-4"]')
     #print(data)
-
+    today_date = datetime.now().strftime('%Y-%m-%d')
 
     for i, x in enumerate(data):
         print(f"Element {i+1}: {x.text}")
@@ -29,7 +29,7 @@ def scrape_url_and_write_csv(output_path,url):
         # Check for clothing keywords in product_info
         clothing_type = next((keyword for keyword in clothing_keywords if keyword in product_info), 'Other')
         
-        cleaned_data.append((i+1, clothing_type))
+        cleaned_data.append((i+1, clothing_type, today_date))
 
     write_csv(output_path, cleaned_data)
 
@@ -40,7 +40,7 @@ def write_csv(output_path, cleaned_data):
         csv_writer = csv.writer(csvfile)
         
         # Write header
-        csv_writer.writerow(['Index', 'Product Type'])
+        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap'])
         
         # Write data
         csv_writer.writerows(cleaned_data)
