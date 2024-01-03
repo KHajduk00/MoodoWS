@@ -31,9 +31,18 @@ def scrape_url_and_write_csv(output_path,url):
         # Check for clothing keywords in product_info
         clothing_type = next((keyword for keyword in clothing_keywords if keyword in product_info), 'Other')
 
+        # Scrape ID of each product
         product_id = x.get('data-product_id', 'N/A')
         
-        cleaned_data.append((i+1, clothing_type, today_date, product_id))
+        # Scrape Price for each product
+        product_price_element = x.find('strong', {'class': 'price'})
+        product_price = product_price_element.text.strip() if product_price_element else 'N/A'
+        
+        # Scrape Link to product page
+        product_link = x.find('a')['href']
+        full_link = f"https://moodo.pl{product_link}"
+
+        cleaned_data.append((i+1, clothing_type, today_date, product_id, product_price, full_link))
 
     write_csv(output_path, cleaned_data)
 
@@ -44,7 +53,7 @@ def write_csv(output_path, cleaned_data):
         csv_writer = csv.writer(csvfile)
         
         # Write header
-        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID'])
+        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Product Price', 'Product Link'])
         
         # Write data
         csv_writer.writerows(cleaned_data)
