@@ -32,8 +32,10 @@ def scrape_url_and_write_csv(output_path,url):
         clothing_type = next((keyword for keyword in clothing_keywords if keyword in product_info), 'Other')
 
         product_id = x.get('data-product_id', 'N/A')
-        
-        cleaned_data.append((i+1, clothing_type, today_date, product_id))
+        product_price_element = x.find('strong', {'class': 'price'})
+        product_price = product_price_element.text.strip() if product_price_element else 'N/A'
+
+        cleaned_data.append((i+1, clothing_type, today_date, product_id, product_price))
 
     write_csv(output_path, cleaned_data)
 
@@ -44,7 +46,7 @@ def write_csv(output_path, cleaned_data):
         csv_writer = csv.writer(csvfile)
         
         # Write header
-        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID'])
+        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Product Price'])
         
         # Write data
         csv_writer.writerows(cleaned_data)
