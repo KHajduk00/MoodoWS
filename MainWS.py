@@ -16,12 +16,3 @@ def create_url(number):
 
 if __name__ == "__main__":
     main()
-
-
-### this is the same!!!!!
-#keyword for keyword in clothing_keywords if keyword in product_info
-
-#for keyword in clothing_keywords:
-#    if keyword in product_info
-#    return keyword
-###
