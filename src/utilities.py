@@ -20,7 +20,11 @@ def scrape_url_and_write_csv(output_path,url):
 
     # Define keywords for types of clothing
     clothing_keywords = ['Spódnica', 'Koszulka', 'Spodnie',
-    'Sukienka', 'Sweter', 'Bluzka', 'Cienki sweter', 'Jeansy', 'Koszula']
+    'Sukienka', 'Sweter', 'Bluzka', 'Cienki sweter', 'Jeansy',
+    'Koszula', 'Bluza', 'Garnitur','Kamizaelka','Koszula','Kurtka',
+    'Płaszcz','Legginsy','Marynarka','Komplet','Biżuteria','Czapka','Gumka do włosów',
+    'Opaska do włosów','Pasek','Portfel','Rękawiczki','Skarpetki','Szalik','Torba','Strój kąpielowy',
+    'Szorty','Buty','Klapki','Kapelusz','Okulary']
 
     # Cleaned data storage
     cleaned_data = []
