@@ -40,7 +40,8 @@ def scrape_url_and_write_csv(output_path,url):
         
         # Scrape Price for each product
         product_price_element = x.find('strong', {'class': 'price'})
-        product_price = product_price_element.text.strip() if product_price_element else 'N/A'
+        price = product_price_element.text.strip() if product_price_element else 'N/A'
+        product_price = int(price.replace(" ", "").replace("zł", "").replace(",",""))/100
         
         # Scrape Link to product page
         product_link = x.find('a')['href']
