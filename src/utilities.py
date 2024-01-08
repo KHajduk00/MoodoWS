@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from datetime import datetime
+import pandas as pd
+import os
 
 def scrape_url_and_write_csv(output_path,url):
     response = requests.get(url)
@@ -64,3 +66,27 @@ def write_csv(output_path, cleaned_data):
         csv_writer.writerows(cleaned_data)
 
     print(f"Cleaned data has been saved to {output_path}")
+
+def merge_csv_files(input_folder, output_folder, output_file_name):
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Initialize an empty DataFrame to store the merged data
+    merged_data = pd.DataFrame()
+
+    # Loop through all CSV files in the input folder
+    for file_name in os.listdir(input_folder):
+        if file_name.endswith(".csv"):
+            # Read each CSV file and append its data to the merged_data DataFrame
+            file_path = os.path.join(input_folder, file_name)
+            data = pd.read_csv(file_path)
+            merged_data = merged_data._append(data, ignore_index=True)
+
+    # Path to the output file
+    output_file_path = os.path.join(output_folder, output_file_name)
+
+    # If the output file already exists, append the data; otherwise, create a new file
+    if os.path.exists(output_file_path):
+        merged_data.to_csv(output_file_path, mode='a', header=False, index=False)
+    else:
+        merged_data.to_csv(output_file_path, index=False)
