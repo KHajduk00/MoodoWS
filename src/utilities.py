@@ -57,6 +57,7 @@ def scrape_url_and_write_csv(output_path,url):
         product_price_before_discount = x.find('del', {'class': 'price --max'}) 
         price_before_disc = product_price_before_discount.text.strip() if product_price_before_discount else 'N/A'
         if price_before_disc == 'N/A':
+
             product_price_before_disc = 'N/A'
         else:
             product_price_before_disc = float(price_before_disc.replace(" ", "").replace("zł", "").replace(",","."))
@@ -76,6 +77,7 @@ def write_csv(output_path, cleaned_data):
         csv_writer = csv.writer(csvfile)
         
         # Write header
+
         csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Discount Type' 'Product Price before discount', 'Product Price', 'Product Link'])
         
         # Write data
