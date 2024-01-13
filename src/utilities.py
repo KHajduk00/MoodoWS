@@ -44,12 +44,20 @@ def scrape_url_and_write_csv(output_path,url):
         product_price_element = x.find('strong', {'class': 'price'})
         price = product_price_element.text.strip() if product_price_element else 'N/A'
         product_price = float(price.replace(" ", "").replace("zł", "").replace(",","."))
+
+        # Scrape Price for each product
+        product_price_before_discount = x.find('del', {'class': 'price --max'}) 
+        price_before_disc = product_price_before_discount.text.strip() if product_price_before_discount else 'N/A'
+        if price_before_disc == 'N/A':
+            continue
+        else:
+            product_price_before_disc = float(price_before_disc.replace(" ", "").replace("zł", "").replace(",","."))
         
         # Scrape Link to product page
         product_link = x.find('a')['href']
         full_link = f"https://moodo.pl{product_link}"
 
-        cleaned_data.append((i+1, clothing_type, today_date, product_id, product_price, full_link))
+        cleaned_data.append((i+1, clothing_type, today_date, product_id, product_price_before_disc, product_price, full_link))
 
     write_csv(output_path, cleaned_data)
 
@@ -60,7 +68,7 @@ def write_csv(output_path, cleaned_data):
         csv_writer = csv.writer(csvfile)
         
         # Write header
-        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Product Price', 'Product Link'])
+        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Product Price before discount', 'Product Price', 'Product Link'])
         
         # Write data
         csv_writer.writerows(cleaned_data)
