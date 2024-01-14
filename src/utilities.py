@@ -4,6 +4,7 @@ import csv
 from datetime import datetime
 import pandas as pd
 import os
+import polars as pl
 
 def scrape_url_and_write_csv(output_path,url):
     response = requests.get(url)
@@ -57,16 +58,19 @@ def scrape_url_and_write_csv(output_path,url):
         product_price_before_discount = x.find('del', {'class': 'price --max'}) 
         price_before_disc = product_price_before_discount.text.strip() if product_price_before_discount else 'N/A'
         if price_before_disc == 'N/A':
-
             product_price_before_disc = 'N/A'
         else:
             product_price_before_disc = float(price_before_disc.replace(" ", "").replace("zł", "").replace(",","."))
         
+        # Scrape Sizes for each product
+        sizes_container = soup.find('div', {'class': 'product__sizes'})
+        product_size_element = [x.get_text() for x in sizes_container.find_all('span', {'class': 'product__size'})]
+
         # Scrape Link to product page
         product_link = x.find('a')['href']
         full_link = f"https://moodo.pl{product_link}"
 
-        cleaned_data.append((i+1, clothing_type, today_date, product_id, discount_type, product_price_before_disc, product_price, full_link))
+        cleaned_data.append((clothing_type, today_date, product_id, discount_type, product_price_before_disc, product_price, product_size_element, full_link))
 
     write_csv(output_path, cleaned_data)
 
@@ -78,7 +82,8 @@ def write_csv(output_path, cleaned_data):
         
         # Write header
 
-        csv_writer.writerow(['Index', 'Product Type', 'Date of scrap', 'Product ID', 'Discount Type' 'Product Price before discount', 'Product Price', 'Product Link'])
+        csv_writer.writerow(['Product Type', 'Date of scrap', 'Product ID', 'Discount Type',
+                              'Product Price before Discount', 'Product Price', 'Product Size', 'Product Link'])
         
         # Write data
         csv_writer.writerows(cleaned_data)
