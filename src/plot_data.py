@@ -41,3 +41,25 @@ plt.ylabel('Price')
 plt.title('Prices of Products with Size "S"')
 plt.show()
 '''
+
+'''
+import pandas as pd
+
+# Read the CSV file into a DataFrame
+df = pd.read_csv('src\merged_data.csv')
+
+# Filter rows with the date '2024-01-14'
+rows_2024_01_14 = df[df['Date of scrap'] == '2024-01-14']
+
+# Filter rows with the date '2024-01-18'
+rows_2024_01_18 = df[df['Date of scrap'] == '2024-01-18']
+
+# Create a mapping of Product IDs to corresponding Product Types for '2024-01-18'
+product_type_mapping = dict(zip(rows_2024_01_18['Product ID'], rows_2024_01_18['Product Type']))
+
+# Replace 'Product Type' values for rows with '2024-01-14' using the mapping
+df.loc[df['Date of scrap'] == '2024-01-14', 'Product Type'] = df['Product ID'].map(product_type_mapping)
+
+# Save the updated DataFrame back to the CSV file
+df.to_csv('your_updated_file.csv', index=False)
+'''

@@ -4,7 +4,6 @@ import csv
 from datetime import datetime
 import pandas as pd
 import os
-import polars as pl
 
 def scrape_url_and_write_csv(output_path,url):
     response = requests.get(url)
@@ -21,22 +20,14 @@ def scrape_url_and_write_csv(output_path,url):
 
     print(f"Total number of elements: {len(data)}")
 
-    # Define keywords for types of clothing
-    clothing_keywords = ['Spódnica', 'Koszulka', 'Spodnie',
-    'Sukienka', 'Sweter', 'Bluzka', 'Cienki sweter', 'Jeansy',
-    'Koszula', 'Bluza', 'Garnitur','Kamizaelka','Koszula','Kurtka',
-    'Płaszcz','Legginsy','Marynarka','Komplet','Biżuteria','Czapka','Gumka do włosów',
-    'Opaska do włosów','Pasek','Portfel','Rękawiczki','Skarpetki','Szalik','Torba','Strój kąpielowy',
-    'Szorty','Buty','Klapki','Kapelusz','Okulary']
-
     # Cleaned data storage
     cleaned_data = []
 
     for i, x in enumerate(data):
-        product_info = x.text.strip()
         
         # Check for clothing keywords in product_info
-        clothing_type = next((keyword for keyword in clothing_keywords if keyword in product_info), 'Other')
+        clothing_type_element = x.find('a', {'class': 'product__name'})
+        clothing_type = clothing_type_element.text.strip() if clothing_type_element else 'Other'
 
         # Scrape ID of each product
         product_id = x.get('data-product_id', 'N/A')
@@ -113,3 +104,26 @@ def merge_csv_files(input_folder, output_folder, output_file_name):
         merged_data.to_csv(output_file_path, mode='a', header=False, index=False)
     else:
         merged_data.to_csv(output_file_path, index=False)
+
+def assign_categories():
+    # DataFrame
+    df = pd.read_csv('single_csv_output\merged_data.csv')
+
+    # List of keywords
+    clothing_keywords = ['Spódnica', 'Koszulka', 'Spodnie','Sukienka',
+                      'Sweter', 'Bluzka', 'Cienki sweter', 'Jeansy',
+                      'Koszula', 'Bluza', 'Garnitur','Kamizaelka',
+                      'Koszula','Kurtka','Płaszcz','Legginsy',
+                      'Marynarka','Komplet','Biżuteria','Czapka',
+                      'Gumka do włosów','Opaska do włosów','Pasek','Portfel',
+                      'Rękawiczki','Skarpetki','Szalik','Torba',
+                      'Strój kąpielowy','Szorty','Buty','Klapki',
+                      'Kapelusz','Okulary', 'T-shirt', 'Kolczyki',
+                      'Naszyjnik', 'Kamizelka', 'Torebka', 'Opaska',
+                      ]
+
+    # Create a new column 'Category'
+    df['Category'] = df['Product Type'].apply(lambda x: next((category for category in clothing_keywords if isinstance(x, str) and category.lower() in x.lower()), 'Other'))
+
+    # Save the DataFrame to a new CSV file
+    df.to_csv("plot_ready_csv\data_for_plotting.csv", index=False)
