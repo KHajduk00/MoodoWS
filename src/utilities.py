@@ -105,7 +105,7 @@ def merge_csv_files(input_folder, output_folder, output_file_name):
     else:
         merged_data.to_csv(output_file_path, index=False)
 
-def assign_categories():
+def assign_categories(output_folder):
     # DataFrame
     df = pd.read_csv('single_csv_output\merged_data.csv')
 
@@ -122,8 +122,11 @@ def assign_categories():
                       'Naszyjnik', 'Kamizelka', 'Torebka', 'Opaska',
                       ]
 
+    # Path to the output file
+    output_file_path = output_folder
+
     # Create a new column 'Category'
     df['Category'] = df['Product Type'].apply(lambda x: next((category for category in clothing_keywords if isinstance(x, str) and category.lower() in x.lower()), 'Other'))
 
     # Save the DataFrame to a new CSV file
-    df.to_csv("plot_ready_csv\data_for_plotting.csv", index=False)
+    df.to_csv(f"{output_file_path}\data_for_plotting.csv", index=False)
