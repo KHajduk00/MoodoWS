@@ -112,10 +112,10 @@ def assign_categories(output_folder):
     # List of keywords
     clothing_keywords = ['Spódnica', 'Koszulka', 'Spodnie','Sukienka',
                       'Sweter', 'Bluzka', 'Cienki sweter', 'Jeansy',
-                      'Koszula', 'Bluza', 'Garnitur','Kamizaelka',
-                      'Koszula','Kurtka','Płaszcz','Legginsy',
+                      'Koszula', 'Bluza', 'Garnitur',
+                      'Kurtka','Płaszcz','Legginsy',
                       'Marynarka','Komplet','Biżuteria','Czapka',
-                      'Gumka do włosów','Opaska do włosów','Pasek','Portfel',
+                      'Gumka do włosów','Pasek','Portfel',
                       'Rękawiczki','Skarpetki','Szalik','Torba',
                       'Strój kąpielowy','Szorty','Buty','Klapki',
                       'Kapelusz','Okulary', 'T-shirt', 'Kolczyki',
