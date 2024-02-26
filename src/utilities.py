@@ -45,7 +45,7 @@ def scrape_url_and_write_csv(output_path,url):
         price = product_price_element.text.strip() if product_price_element else 'N/A'
         product_price = float(price.replace(" ", "").replace("zł", "").replace(",","."))
 
-        # Scrape Price for each product
+        # Scrape Price Before Discount for each product
         product_price_before_discount = x.find('del', {'class': 'price --max'}) 
         price_before_disc = product_price_before_discount.text.strip() if product_price_before_discount else 'N/A'
         if price_before_disc == 'N/A':
